@@ -1,3 +1,4 @@
+from datetime import date
 import logging
 from io import StringIO
 from typing import Any
@@ -109,30 +110,22 @@ async def edit_person_put(request: Request, _id: str,
                           data_nascimento: str = Form(""),
                           genero: str = Form(""),
                           nacionalidade: str = Form(""),
-                          data_criacao: str = Form(""),
-                          data_atualizacao: str = Form("")):
-    # async def edit_person_put(request: Request, _id: str, body: Any):
+                          ):
     """Edição dos dados da tabela no banco."""
     context: dict[str, Any] = {"request": request}
     status_code: int
+
     try:
-        new_rec = Person(
-            nome=nome,
-            data_nascimento=data_nascimento,
-            genero=genero,
-            nacionalidade=nacionalidade,
-            data_criacao=data_criacao,
-            data_atualizacao=data_atualizacao
-        )
-        result = await persons.find_one({"_id": ObjectId(_id)})
-        updated = await persons.update_one(
-            filter={"_id": ObjectId(_id)},
-            update={"$set": new_rec.model_dump()}
-        )
-        result = await persons.find_one({"_id": ObjectId(_id)})
-        valid_rec = Person(**result)
-        valid_rec.id = _id
-        context["person"] = valid_rec
+        rec_values = {
+            "nome": nome,
+            "data_nascimento": data_nascimento,
+            "genero": genero,
+            "nacionalidade": nacionalidade,
+            "data_criacao": date.today(),
+            "data_atualizacao": date.today()
+        }
+        updated = await Database.edit_person(_id, rec_values)
+        context["person"] = updated
         status_code = 200
     except Exception as e:
         _logger.error(e)

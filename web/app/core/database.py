@@ -51,10 +51,22 @@ class Database:
 
     @classmethod
     async def get_person(cls, _id: str) -> Person:
-        try:
-            result: dict[str, Any] = await persons.find_one({"_id": ObjectId(_id)})
-            valid_record = Person(**result)
-            valid_record.id = result['_id']
-            return valid_record
-        except InvalidId as e:
-            return None
+        result: dict[str, Any] = await persons.find_one({"_id": ObjectId(_id)})
+        valid_record = Person(**result)
+        valid_record.id = result['_id']
+        return valid_record
+
+    @classmethod
+    async def edit_person(cls, _id: str, new_data: dict[str, Any]) -> Person:
+        new_rec = Person(**new_data)
+        result = await persons.find_one({"_id": ObjectId(_id)})
+        updated_values = new_rec.model_dump(
+            exclude={"data_criacao"})
+        updated = await persons.update_one(
+            filter={"_id": ObjectId(_id)},
+            update={"$set": updated_values}
+        )
+        result = await persons.find_one({"_id": ObjectId(_id)})
+        valid_rec = Person(**result)
+        valid_rec.id = _id
+        return valid_rec

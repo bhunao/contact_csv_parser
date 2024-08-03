@@ -32,11 +32,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="creationDate" class="form-label">Data de Criação</label>
-                    <input name="data_criacao" type="date" class="form-control" id="creationDate" value="{{ person.data_criacao.strftime('%Y-%m-%d') }}" disabled>
+                    <input type="date" class="form-control" id="creationDate" value="{{ person.data_criacao.strftime('%Y-%m-%d') }}" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="updateDate" class="form-label">Data de Atualização</label>
-                    <input name="data_atualizacao" type="date" class="form-control" id="updateDate" value="{{ person.data_atualizacao.strftime('%Y-%m-%d') }}" disabled>
+                    <input type="date" class="form-control" id="updateDate" value="{{ person.data_atualizacao.strftime('%Y-%m-%d') }}" disabled>
                 </div>
 
                 {% if edit %}
