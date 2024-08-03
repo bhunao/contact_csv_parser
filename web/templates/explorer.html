@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container pt-5 pb-5">
+
+
+	{% for key, val in feed.items() %}
+	<div class="form-floating mb-3">
+		<input type="email" readonly class="form-control-plaintext" id="floatingPlaintextInput" placeholder="name@example.com" value="{{ val }}">
+		<label for="floatingPlaintextInput">{{ key }}</label>
+	</div>
+	{% endfor %}
+
+	<hr>
+
+	{% for key, val in feed["entries"][0].items() %}
+	<div class="form-floating mb-3">
+		<input type="email" readonly class="form-control-plaintext" id="floatingPlaintextInput" placeholder="name@example.com" value="{{ val }}">
+		<label for="floatingPlaintextInput">{{ key }}</label>
+	</div>
+	{% endfor %}
+
+	{% for f in feed["entries"] %}
+
+	<a href="{{ f['link'] }}">
+		<div class="container card rounded-0 w-100 mb-3 p-0 ">
+			<div class="row card-body m-0 p-0">
+				<div class="col-10 w-100 m-0 p-0">
+					<div class="card-body m-0 p-0">
+						<div class="bg-dark text-white w-100 h-100 p-3">
+						<h5 class="card-title m-0 w-100 h-100">{{ f['title'] }}</h5>
+						</div>
+						<hr class="ms-2 me-2">
+						<p class="card-text">{{ f['summary'][:200] }}</p>
+						<p class="card-text m-2"><small class="text-body-secondary">publised date: {{ f['published'] }}</small></p>
+					</div>
+				</div>
+				{% if f.get("media_thumbnail") %}
+				<div class="col">
+					<img src="{{ f['media_thumbnail'][0]['url'] }}" class="card-img-bottom" alt="..." style="height: 120px;width: 160px;">
+				</div>
+				{% endif %}
+			</div>
+		</div>
+	</a>
+
+	{% endfor %}
+
+
+</div>
+{% endblock %}

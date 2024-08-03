@@ -1,0 +1,45 @@
+{% if person %}
+<tr hx-target="this" hx-swap="outerHTML">
+  <td>
+    <button hx-get="/persons/{{ person['_id'] }}/edit" class="btn btn-primary btn-sm">
+      Edit
+    </button>
+  </td>
+
+  <td>{{ person["_id"] }}</td>
+  <td>{{ person["nome"] }}</td>
+  <td>{{ person["data_nascimento"] }}</td>
+  <td>{{ person["genero"] }}</td>
+  <td>{{ person["nacionalidade"] }}</td>
+  <td>{{ person["data_criacao"] }}</td>
+  <td>{{ person["data_atualizacao"] }}</td>
+
+  <td>
+    <button class="btn btn-danger btn-sm" hx-delete="/persons/{{ person['_id'] }}" hx-target="closest tr" hx-swap="outerHTML swap:1s">
+      delete
+    </button>
+  </td>
+</tr>
+{% else %}
+<tr hx-target="this" hx-swap="outerHTML">
+  <td>
+    <button hx-get="#" class="btn btn-primary btn-sm">
+      Edit
+    </button>
+  </td>
+
+  <td>...</td>
+  <td>...</td>
+  <td>...</td>
+  <td>...</td>
+  <td>...</td>
+  <td>...</td>
+  <td>...</td>
+
+  <td>
+    <button class="btn btn-danger btn-sm" hx-delete="#" hx-target="closest tr" hx-swap="outerHTML swap:1s">
+      delete
+    </button>
+  </td>
+</tr>
+{% endif %}

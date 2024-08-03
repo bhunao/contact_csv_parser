@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+        <div class="p-5 bg-light d-flex justify-content-center align-items-center vh-100">
+            <div class="card shadow p-5">
+                <h1 class="display-3">Upload File</h1>
+                <hr class="pb-3">
+
+                <form id="form" hx-encoding="multipart/form-data" hx-post="/persons/upload_csv">
+                    <div class="mb-3">
+                        <input type="file" name="file" class="form-control">
+                    </div>
+                    <button hx-post="/persons/upload_csv" hx-target="#modal_content" hx-trigger="click" data-bs-toggle="modal"
+                        data-bs-target="#modals-here" type="submit" class="btn btn-primary w-100">Upload File</button>
+                    <progress id="progress" value="0" max="100" class="w-100 mt-3"></progress>
+                </form>
+            </div>
+        </div>
+
+    <div id="modals-here"
+        class="modal modal-blur fade"
+        style="display: none"
+        aria-hidden="false"
+        tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="container alert card">
+                <div id="modal_content" class="modal-content alert alert-primary">
+                    Select a file first...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    htmx.on('#form', 'htmx:xhr:progress', function(evt) {
+        htmx.find('#progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)
+    });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <div class="p-5 d-flex justify-content-center align-items-center">
+    <div class="card shadow p-5">
+      <h1 class="display-3">Informações do Contato</h1>
+      <hr class="pb-3">
+
+      <form>
+        <div class="mb-3">
+          <label for="_id" class="form-label">id</label>
+          <input disabled class="form-control" type="text" id="_id" name="_id" value="{{ person.id.__str__() }}">
+        </div>
+        <div class="mb-3">
+          <label for="nome" class="form-label">Nome</label>
+          <input disabled class="form-control" type="text" id="nome" name="nome" value="{{ person.nome }}">
+        </div>
+        <div class="mb-3">
+          <label for="data_nascimento" class="form-label">Data de Nascimento</label>
+          <input disabled class="form-control" type="text" id="data_nascimento" name="data_nascimento" value="{{ person.data_nascimento.strftime('%d-%m-%Y') }}">
+        </div>
+        <div class="mb-3">
+          <label for="genero" class="form-label">Genero</label>
+          <input disabled class="form-control" type="text" id="genero" name="genero" value="{{ person.genero }}">
+        </div>
+        <div class="mb-3">
+          <label for="nacionalidade" class="form-label">Nacionalidade</label>
+          <input disabled class="form-control" type="text" id="nacionalidade" name="nacionalidade" value="{{ person.nacionalidade }}">
+        </div>
+        <div class="mb-3">
+          <label for="data_criacao" class="form-label">Data de Criação</label>
+          <input disabled class="form-control" type="text" id="data_criacao" name="data_criacao" value="{{ person.data_criacao.strftime('%d-%m-%Y') }}">
+        </div>
+        <div class="mb-3">
+          <label for="data_atualizacao" class="form-label">Data de Atualização</label>
+          <input disabled class="form-control" type="text" id="data_atualizacao" name="data_atualizacao" value="{{ person.data_atualizacao.strftime('%d-%m-%Y') }}">
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+{% endblock %}

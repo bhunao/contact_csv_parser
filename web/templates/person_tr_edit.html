@@ -1,0 +1,36 @@
+<tr hx-target="this" hx-swap="outerHTML">
+  <form hx-put="/persons/{{ person['_id'] }}/edit">
+    <td>
+      <button type="submit" class="m-1 btn btn-primary btn-sm">
+        Save
+      </button>
+      <button hx-get="/persons/{{ person['_id'] }}" class="m-1 btn btn-danger btn-sm">
+        Cancel
+      </button>
+    </td>
+
+    <td>
+      {{ person["_id"] }}
+    </td>
+    <td>
+      <input type="text" class="form-control" name="nome" value="{{ person["nome"] }}" aria-label="nome">
+    </td>
+    <td>
+      <input type="text" class="form-control" name="data_nascimento" value="{{ person["data_nascimento"] }}" aria-label="data_nascimento">
+    </td>
+    <td>
+      <input type="text" class="form-control" name="genero" value="{{ person["genero"] }}" aria-label="genero">
+    </td>
+    <td>
+      <input type="text" class="form-control" name="nacionalidade" value="{{ person["nacionalidade"] }}" aria-label="nacionalidade">
+    </td>
+    <td>
+      <input type="text" class="form-control" name="data_criacao" value="{{ person["data_criacao"] }}" aria-label="data_criacao">
+    </td>
+    <td>
+      <input type="text" class="form-control" name="data_atualizacao" value="{{ person["data_atualizacao"] }}" aria-label="data_atualizacao">
+    </td>
+
+    <td></td>
+  </form>
+</tr>

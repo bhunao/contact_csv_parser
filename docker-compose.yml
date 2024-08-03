@@ -1,0 +1,40 @@
+version: '0.1'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    env_file:
+      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD}"
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodata:/data/db
+
+  mongo_express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    env_file:
+      - ./mongo-express/.env
+
+  web:
+    build: ./web
+    ports:
+      - "8777:8777"
+    volumes:
+      - ./web/:/web/
+    env_file:
+      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD}"
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodata:
+    driver: local
+

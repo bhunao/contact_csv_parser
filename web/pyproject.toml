@@ -1,0 +1,29 @@
+[tool.basedpyright]
+include = ["app"]
+exclude = ["**/node_modules",
+    "**/__pycache__",
+    "src/experimental",
+    "src/typestubs"
+]
+ignore = ["src/oldstuff"]
+defineConstant = { DEBUG = true }
+stubPath = "src/stubs"
+
+# reportMissingImports = true
+
+pythonVersion = "3.11"
+pythonPlatform = "Linux"
+# reportGeneralTypeIssues = false
+
+# basedpyright errors and warnings
+reportMissingTypeStubs = "warning"
+
+reportUnusedVariable = "warning"
+reportUnusedImport = "warning"
+reportUnknownVariableType = "warning"
+reportUnknownMemberType = "warning"
+reportAny = "warning"
+
+executionEnvironments = [
+  { root = "web" }
+]
