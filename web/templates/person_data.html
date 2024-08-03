@@ -1,41 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
 
+  <div class="container mt-5">
+    </div>
+
   <div class="p-5 d-flex justify-content-center align-items-center">
     <div class="card shadow p-5">
-      <h1 class="display-3">Informações do Contato</h1>
+      <h2 class="mb-4 display-3">Informações do Contato</h2>
       <hr class="pb-3">
 
-      <form>
-        <div class="mb-3">
-          <label for="_id" class="form-label">id</label>
-          <input disabled class="form-control" type="text" id="_id" name="_id" value="{{ person.id.__str__() }}">
-        </div>
-        <div class="mb-3">
-          <label for="nome" class="form-label">Nome</label>
-          <input disabled class="form-control" type="text" id="nome" name="nome" value="{{ person.nome }}">
-        </div>
-        <div class="mb-3">
-          <label for="data_nascimento" class="form-label">Data de Nascimento</label>
-          <input disabled class="form-control" type="text" id="data_nascimento" name="data_nascimento" value="{{ person.data_nascimento.strftime('%d-%m-%Y') }}">
-        </div>
-        <div class="mb-3">
-          <label for="genero" class="form-label">Genero</label>
-          <input disabled class="form-control" type="text" id="genero" name="genero" value="{{ person.genero }}">
-        </div>
-        <div class="mb-3">
-          <label for="nacionalidade" class="form-label">Nacionalidade</label>
-          <input disabled class="form-control" type="text" id="nacionalidade" name="nacionalidade" value="{{ person.nacionalidade }}">
-        </div>
-        <div class="mb-3">
-          <label for="data_criacao" class="form-label">Data de Criação</label>
-          <input disabled class="form-control" type="text" id="data_criacao" name="data_criacao" value="{{ person.data_criacao.strftime('%d-%m-%Y') }}">
-        </div>
-        <div class="mb-3">
-          <label for="data_atualizacao" class="form-label">Data de Atualização</label>
-          <input disabled class="form-control" type="text" id="data_atualizacao" name="data_atualizacao" value="{{ person.data_atualizacao.strftime('%d-%m-%Y') }}">
-        </div>
-      </form>
+        <form>
+            <div class="mb-3">
+                <label for="personId" class="form-label">ID</label>
+                <input type="text" class="form-control" id="personId" value="{{ person.id }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="personName" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="personName" value="{{ person.nome }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="birthDate" class="form-label">Data de Nascimento</label>
+                <input type="date" class="form-control" id="birthDate" value="{{ person.data_nascimento.strftime('%Y-%m-%d') }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="gender" class="form-label">Genero</label>
+                <input type="text" class="form-control" id="gender" value="{{ person.genero }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="nationality" class="form-label">Nacionalidade</label>
+                <input type="text" class="form-control" id="nationality" value="{{ person.nacionalidade }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="creationDate" class="form-label">Data de Criação</label>
+                <input type="date" class="form-control" id="creationDate" value="{{ person.data_criacao.strftime('%Y-%m-%d') }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="updateDate" class="form-label">Data de Atualização</label>
+                <input type="date" class="form-control" id="updateDate" value="{{ person.data_atualizacao.strftime('%Y-%m-%d') }}" disabled>
+            </div>
+        </form>
     </div>
 
   </div>
