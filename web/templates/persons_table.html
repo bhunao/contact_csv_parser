@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-5">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Data de Nascimento</th>
+                    <th scope="col">Gênero</th>
+                    <th scope="col">Nacionalidade</th>
+                    <th scope="col">Data de Criação</th>
+                    <th scope="col">Data de Atualização</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for person in persons_list %}
+                <tr hx-target="this" hx-swap="outerHTML">
+                    <td>
+                        <a href="/persons/data/{{ person.id }}">
+                            <button class="btn btn-primary btn-sm">
+                                Mais..
+                            </button>
+                        </a>
+                    </td>
+
+                    <td>{{ person.nome }}</td>
+                    <td>{{ person.data_nascimento.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ person.genero }}</td>
+                    <td>{{ person.nacionalidade }}</td>
+                    <td>{{ person.data_criacao.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ person.data_atualizacao.strftime('%d/%m/%Y') }}</td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -60,6 +60,32 @@ class Database:
     async def edit_person(cls, _id: str, new_data: dict[str, Any]) -> Person:
         new_rec = Person(**new_data)
         result = await persons.find_one({"_id": ObjectId(_id)})
+
+        # TODO: add audit log
+        print("====================================")
+        print(new_data)
+        print(result)
+
+        old = new_rec.model_dump()
+        old = result.copy()
+        del old["_id"]
+        old_items = list(old.items())
+        new_items = list(new_data.items())
+
+        changed = dict()
+        for k, v in old_items:
+            _old = old.get(k)
+            _new = new_data.get(k)
+            if old.get(k) != new_data.get(k):
+                changed[k] = _old, _new
+                print(_old, _new)
+
+        print(old_items)
+        print(new_items)
+        print("----------")
+        print(changed)
+
+        print("====================================")
         updated_values = new_rec.model_dump(
             exclude={"data_criacao"})
         updated = await persons.update_one(
@@ -70,3 +96,24 @@ class Database:
         valid_rec = Person(**result)
         valid_rec.id = _id
         return valid_rec
+
+    @ classmethod
+    async def create_one_person(cls, new_data: dict[str, Any]) -> Person:
+        valid_rec = Person(**new_data)
+        result = await persons.insert_one(valid_rec.model_dump())
+        db_rec = await persons.find_one({"_id": ObjectId(result.inserted_id)})
+        valid_rec = Person(**db_rec)
+        valid_rec.id = result.inserted_id
+        return valid_rec
+
+    @ classmethod
+    async def get_all_persons(cls, n: int | None = None) -> list[Person]:
+        persons_cursor = persons.find()
+        persons_list = await persons_cursor.to_list(n)
+        valid_rec_list = []
+        for vals in persons_list:
+            valid_rec = Person(**vals)
+            valid_rec.id = str(vals["_id"])
+            valid_rec_list.append(valid_rec)
+
+        return valid_rec_list

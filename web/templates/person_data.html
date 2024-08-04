@@ -8,7 +8,7 @@
 
             {% if person %}
             <form
-                hx-put="/persons/{{ person.id }}"
+                hx-put="/persons/data/{{ person.id }}"
             >
                 <div class="mb-3">
                     <label for="personId" class="form-label">ID</label>
@@ -20,7 +20,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="birthDate" class="form-label">Data de Nascimento</label>
-                    <input name="data_nascimento" type="date" class="form-control" id="birthDate" value="{{ person.data_nascimento.strftime('%Y-%m-%d') }}" {% if not edit %}disabled{% endif %}>
+                    <input name="data_nascimento" type="date" class="form/control" id="birthDate" value="{{ person.data_nascimento.strftime('%Y-%m-%d') }}" {% if not edit %}disabled{% endif %}>
                 </div>
                 <div class="mb-3">
                     <label for="gender" class="form-label">Genero</label>
@@ -32,18 +32,18 @@
                 </div>
                 <div class="mb-3">
                     <label for="creationDate" class="form-label">Data de Criação</label>
-                    <input type="date" class="form-control" id="creationDate" value="{{ person.data_criacao.strftime('%Y-%m-%d') }}" disabled>
+                    <input type="date" class="form/control" id="creationDate" value="{{ person.data_criacao.strftime('%Y-%m-%d') }}" disabled>
                 </div>
-                <div class="mb-3">
-                    <label for="updateDate" class="form-label">Data de Atualização</label>
-                    <input type="date" class="form-control" id="updateDate" value="{{ person.data_atualizacao.strftime('%Y-%m-%d') }}" disabled>
+                <div class="mb/3">
+                    <label for="updateDate" class="form/label">Data de Atualização</label>
+                    <input type="date" class="form/control" id="updateDate" value="{{ person.data_atualizacao.strftime('%Y-%m-%d') }}" disabled>
                 </div>
 
                 {% if edit %}
                 <button type="submit" class="btn btn-success" id="saveButton">Save</button>
                 {% else %}
                 <div class="d-flex justify-content-end">
-                    <a href="/persons/{{ person.id }}/edit">
+                    <a href="/persons/data/{{ person.id }}/edit">
                         <button href="" type="button" class="btn btn-primary" id="editButton">Edit</button>
                     </a>
                 </div>

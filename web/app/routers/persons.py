@@ -22,8 +22,8 @@ router = APIRouter()
 @router.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     return TEMPLATES(
-        request,
-        "index.html"
+        "index.html",
+        context={"request": request}
     )
 
 
@@ -61,7 +61,7 @@ async def upload_csv(request: Request, file: UploadFile):
     )
 
 
-@router.get("/{_id}")
+@router.get("/data/{_id}")
 async def get_person(request: Request, _id: str):
     """Edição dos dados da tabela no banco."""
     context: dict[str, Any] = {"request": request}
@@ -82,7 +82,7 @@ async def get_person(request: Request, _id: str):
     )
 
 
-@router.get("/{_id}/edit")
+@router.get("/data/{_id}/edit")
 async def edit_person(request: Request, _id: str):
     """Edição dos dados da tabela no banco."""
     context: dict[str, Any] = {"request": request}
@@ -104,7 +104,7 @@ async def edit_person(request: Request, _id: str):
     )
 
 
-@router.put("/{_id}")
+@router.put("/data/{_id}")
 async def edit_person_put(request: Request, _id: str,
                           nome: str = Form(""),
                           data_nascimento: str = Form(""),
@@ -137,4 +137,61 @@ async def edit_person_put(request: Request, _id: str,
         context=context,
         status_code=status_code,
         block_name="content",
+    )
+
+
+@router.get("/create")
+async def create_new_person_get(request: Request):
+    context: dict[str, Any] = {"request": request}
+    return TEMPLATES(
+        "create_person.html",
+        context=context,
+    )
+
+
+@router.post("/create")
+async def create_new_person_post(
+    request: Request,
+    nome: str = Form(""),
+    data_nascimento: str = Form(""),
+    genero: str = Form(""),
+    nacionalidade: str = Form(""),
+    data_criacao: str = Form(""),
+    data_atualizacao: str = Form(""),
+):
+    context: dict[str, Any] = {"request": request}
+    try:
+        rec_values = {
+            "nome": nome,
+            "data_nascimento": data_nascimento,
+            "genero": genero,
+            "nacionalidade": nacionalidade,
+            "data_criacao": data_criacao,
+            "data_atualizacao": data_atualizacao
+        }
+        record = await Database.create_one_person(rec_values)
+        context["person"] = record
+        status_code = 200
+    except Exception as e:
+        status_code = 400
+        _logger.error(e)
+
+    return TEMPLATES(
+        "person_data.html",
+        context=context,
+        status_code=status_code,
+        block_name="content",
+    )
+
+
+@router.get("/all")
+async def get__all_persons(request: Request):
+    valid_rec_list = await Database.get_all_persons()
+    context: dict[str, Any] = {"request": request}
+    context["persons_list"] = valid_rec_list
+    status_code = 200
+    return TEMPLATES(
+        "persons_table.html",
+        context=context,
+        status_code=status_code,
     )
