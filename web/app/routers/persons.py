@@ -1,10 +1,10 @@
 from datetime import date
 import logging
-from io import StringIO
+from io import BytesIO, StringIO
 from typing import Any
 from bson import ObjectId
 from bson.errors import InvalidId
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 import pandas as pd
 
 from fastapi import APIRouter, Form, Request, UploadFile
@@ -223,4 +223,25 @@ async def get_persons_changelong(request: Request, _id: str | None = None):
         "changes_table.html",
         context=context,
         status_code=status_code,
+    )
+
+
+@router.get("/export_csv")
+async def export_download_as_csv():
+    """Exporta a tabela atualizada/filtrada em formato CSV."""
+    # TODO: adicionar filtros
+    result = persons.find()
+    result = await result.to_list(None)
+    for rec in result:
+        del rec["_id"]
+
+    df = pd.DataFrame(result)
+    output = BytesIO()
+    df.to_csv(output, index=False)
+    output.seek(0)
+
+    return StreamingResponse(
+        output,
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=perssoas.csv"}
     )
