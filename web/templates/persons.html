@@ -19,7 +19,7 @@
                 {% for person in persons %}
                 <tr hx-target="this" hx-swap="outerHTML">
                     <td>
-                        <button hx-get="/persons/{{ person['_id'] }}/edit" class="btn btn-primary btn-sm">
+                        <button hx-get="/persons/{{ person['_id'] }}/edit" class="btn btn-dark btn-sm">
                             Edit
                         </button>
                     </td>

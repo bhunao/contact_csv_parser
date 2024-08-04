@@ -1,7 +1,7 @@
 {% if person %}
 <tr hx-target="this" hx-swap="outerHTML">
   <td>
-    <button hx-get="/persons/{{ person['_id'] }}/edit" class="btn btn-primary btn-sm">
+    <button hx-get="/persons/{{ person['_id'] }}/edit" class="btn btn-dark btn-sm">
       Edit
     </button>
   </td>
@@ -23,7 +23,7 @@
 {% else %}
 <tr hx-target="this" hx-swap="outerHTML">
   <td>
-    <button hx-get="#" class="btn btn-primary btn-sm">
+    <button hx-get="#" class="btn btn-dark btn-sm">
       Edit
     </button>
   </td>
