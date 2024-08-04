@@ -199,14 +199,9 @@ async def get__all_persons(request: Request):
 
 @router.get("/changelog")
 async def get_persons_changelong(request: Request, _id: str | None = None):
-    # TODO: move this to database class
     context: dict[str, Any] = {"request": request}
     try:
-        if _id:
-            auditlogs = persons_changelog.find({"person_id": _id})
-        else:
-            auditlogs = persons_changelog.find()
-        logs_list = [PersonsChangeLog(**log) async for log in auditlogs]
+        logs_list = await Database.get_changelog(_id)
         status_code = 200
         context["person_id"] = _id
         context["auditlog_list"] = logs_list
@@ -215,9 +210,6 @@ async def get_persons_changelong(request: Request, _id: str | None = None):
         status_code = 404
         context["person_id"] = f"'{_id}' NOT FOUND"
         context["auditlog_list"] = []
-
-    # logs_list = await auditlogs.to_list(None)
-    # auditlog_list = [PersonsChangeLog(**log) for log in logs_list]
 
     return TEMPLATES(
         "changes_table.html",
@@ -230,15 +222,7 @@ async def get_persons_changelong(request: Request, _id: str | None = None):
 async def export_download_as_csv():
     """Exporta a tabela atualizada/filtrada em formato CSV."""
     # TODO: adicionar filtros
-    result = persons.find()
-    result = await result.to_list(None)
-    for rec in result:
-        del rec["_id"]
-
-    df = pd.DataFrame(result)
-    output = BytesIO()
-    df.to_csv(output, index=False)
-    output.seek(0)
+    output = await Database.export_persons_as_csv()
 
     return StreamingResponse(
         output,

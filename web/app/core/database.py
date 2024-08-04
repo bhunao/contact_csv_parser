@@ -1,4 +1,6 @@
+import pandas as pd
 from datetime import datetime
+from io import BytesIO
 import logging
 from typing import Any
 from bson import ObjectId
@@ -113,7 +115,7 @@ class Database:
         valid_rec.id = _id
         return valid_rec
 
-    @ classmethod
+    @classmethod
     async def create_one_person(cls, new_data: dict[str, Any]) -> Person:
         valid_rec = Person(**new_data)
         result = await persons.insert_one(valid_rec.model_dump())
@@ -122,7 +124,7 @@ class Database:
         valid_rec.id = result.inserted_id
         return valid_rec
 
-    @ classmethod
+    @classmethod
     async def get_all_persons(cls, n: int | None = None) -> list[Person]:
         persons_cursor = persons.find()
         persons_list = await persons_cursor.to_list(n)
@@ -133,3 +135,25 @@ class Database:
             valid_rec_list.append(valid_rec)
 
         return valid_rec_list
+
+    @classmethod
+    async def get_changelog(cls, _id: str | None = None) -> list[PersonsChangeLog]:
+        if _id:
+            auditlogs = persons_changelog.find({"person_id": _id})
+        else:
+            auditlogs = persons_changelog.find()
+
+        logs_list = [PersonsChangeLog(**log) async for log in auditlogs]
+        return logs_list
+
+    @classmethod
+    async def export_persons_as_csv(cls) -> BytesIO:
+        record_list = await Database.get_all_persons()
+        dict_record_list = [rec.model_dump(
+            exclude={"id"}) for rec in record_list]
+
+        df = pd.DataFrame(dict_record_list)
+        output = BytesIO()
+        df.to_csv(output, index=False)
+        output.seek(0)
+        return output
