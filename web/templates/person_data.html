@@ -44,7 +44,13 @@
                 {% else %}
                 <div class="d-flex justify-content-end">
                     <a href="/persons/data/{{ person.id }}/edit">
-                        <button href="" type="button" class="btn btn-primary" id="editButton">Edit</button>
+                        <button href="" type="button" class="mx-2 btn btn-primary" id="editButton">Edit</button>
+                    </a>
+
+                    <a href="/persons/changelog?_id={{ person.id }}">
+                        <button class="btn btn-primary mx-2">
+                            Log
+                        </button>
                     </a>
                 </div>
 

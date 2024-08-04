@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 from typing import Any
 from bson import ObjectId
 from bson.errors import InvalidId
@@ -6,9 +7,10 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.results import InsertManyResult
 
 from app.core.config import settings
-from app.models import Person
+from app.models import Person, PersonsChangeLog
 
 
+logger = logging.getLogger(__name__)
 mongo_uri = "mongodb://{user}:{password}@mongodb:27017".format
 MONGO_URI: str = mongo_uri(
     user=settings.MONGO_INITDB_ROOT_USERNAME,
@@ -16,7 +18,9 @@ MONGO_URI: str = mongo_uri(
 )
 client = AsyncIOMotorClient(MONGO_URI)
 database = client.get_database("zoox")
+
 persons = database.get_collection("persons")
+persons_changelog = database.get_collection("persons_changelog")
 
 
 class Database:
@@ -57,40 +61,52 @@ class Database:
         return valid_record
 
     @classmethod
+    async def audit_log_changed(cls, _id: str, old: Person, new: Person) -> dict[str, Any]:
+        old_dict = old.model_dump()
+        new_dict = new.model_dump()
+
+        diff: dict[str, Any] = dict()
+        for key in old_dict:
+            if key in ("data_criacao", "data_atualizacao"):
+                continue
+            _old = old_dict[key]
+            _new = new_dict[key]
+            if _old != _new:
+                diff[key] = _new
+                logger.debug(f"{key}: {old} -> {new}.")
+
+                log = PersonsChangeLog(
+                    person_id=_id,
+                    date_changed=datetime.now(),
+                    row_changed=key,
+                    old_value=_old,
+                    new_value=_new,
+                )
+                log_dict = log.model_dump()
+                insrted = await persons_changelog.insert_one(log_dict)
+        return diff
+
+    @classmethod
     async def edit_person(cls, _id: str, new_data: dict[str, Any]) -> Person:
-        new_rec = Person(**new_data)
+        new_record = Person(**new_data)
         result = await persons.find_one({"_id": ObjectId(_id)})
 
-        # TODO: add audit log
-        print("====================================")
-        print(new_data)
-        print(result)
+        old_record = Person(**result)
+        diff = await cls.audit_log_changed(_id, old_record, new_record)
+        print("===================")
+        print(diff)
+        print("===================")
+        if not diff:
+            logger.info(f"No changes in the document '{_id}'.")
+            old_record.id = _id
+            return old_record
 
-        old = new_rec.model_dump()
-        old = result.copy()
-        del old["_id"]
-        old_items = list(old.items())
-        new_items = list(new_data.items())
-
-        changed = dict()
-        for k, v in old_items:
-            _old = old.get(k)
-            _new = new_data.get(k)
-            if old.get(k) != new_data.get(k):
-                changed[k] = _old, _new
-                print(_old, _new)
-
-        print(old_items)
-        print(new_items)
-        print("----------")
-        print(changed)
-
-        print("====================================")
-        updated_values = new_rec.model_dump(
+        diff["data_atualizacao"] = new_record.model_dump()["data_atualizacao"]
+        updated_values = new_record.model_dump(
             exclude={"data_criacao"})
         updated = await persons.update_one(
             filter={"_id": ObjectId(_id)},
-            update={"$set": updated_values}
+            update={"$set": diff}
         )
         result = await persons.find_one({"_id": ObjectId(_id)})
         valid_rec = Person(**result)

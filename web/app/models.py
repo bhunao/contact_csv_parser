@@ -16,7 +16,7 @@ class Person(BaseModel):
 class PersonsChangeLog(BaseModel):
     """Implementação de um histórico de alterações da tabela,
     registrando as modificações feitas."""
-    person_id: int
+    person_id: str
     date_changed: datetime
     row_changed: str
     old_value: str

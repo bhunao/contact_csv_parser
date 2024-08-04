@@ -9,13 +9,13 @@ import pandas as pd
 
 from fastapi import APIRouter, Form, Request, UploadFile
 
-from app.core.database import Database, persons
+from app.core.database import Database, persons, persons_changelog
 from app.core.config import settings
-from app.models import Person
+from app.models import Person, PersonsChangeLog
 
 
 TEMPLATES = settings.TEMPLATES.TemplateResponse
-_logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
@@ -49,7 +49,7 @@ async def upload_csv(request: Request, file: UploadFile):
         context["alert_type"] = "success"
         status_code = 200
     except Exception as e:
-        _logger.error(e)
+        logger.error(e)
         context["msg"] = f"Erro ao ler arquivo '{file.filename}'."
         context["alert_type"] = "danger"
         status_code = 400
@@ -71,7 +71,7 @@ async def get_person(request: Request, _id: str):
         context["person"] = record
         status_code = 200
     except InvalidId as e:
-        _logger.debug(e)
+        logger.debug(e)
         context["error"] = "Person id not found."
         status_code = 404
 
@@ -93,7 +93,7 @@ async def edit_person(request: Request, _id: str):
         context["person"] = record
         status_code = 200
     except InvalidId as e:
-        _logger.debug(e)
+        logger.debug(e)
         context["error"] = "Person id not found."
         status_code = 404
 
@@ -128,7 +128,7 @@ async def edit_person_put(request: Request, _id: str,
         context["person"] = updated
         status_code = 200
     except Exception as e:
-        _logger.error(e)
+        logger.error(e)
         context["error"] = "Person id not found."
         status_code = 404
 
@@ -174,7 +174,7 @@ async def create_new_person_post(
         status_code = 200
     except Exception as e:
         status_code = 400
-        _logger.error(e)
+        logger.error(e)
 
     return TEMPLATES(
         "person_data.html",
@@ -192,6 +192,35 @@ async def get__all_persons(request: Request):
     status_code = 200
     return TEMPLATES(
         "persons_table.html",
+        context=context,
+        status_code=status_code,
+    )
+
+
+@router.get("/changelog")
+async def get_persons_changelong(request: Request, _id: str | None = None):
+    # TODO: move this to database class
+    context: dict[str, Any] = {"request": request}
+    try:
+        if _id:
+            auditlogs = persons_changelog.find({"person_id": _id})
+        else:
+            auditlogs = persons_changelog.find()
+        logs_list = [PersonsChangeLog(**log) async for log in auditlogs]
+        status_code = 200
+        context["person_id"] = _id
+        context["auditlog_list"] = logs_list
+    except Exception as e:
+        logger.error(e)
+        status_code = 404
+        context["person_id"] = f"'{_id}' NOT FOUND"
+        context["auditlog_list"] = []
+
+    # logs_list = await auditlogs.to_list(None)
+    # auditlog_list = [PersonsChangeLog(**log) for log in logs_list]
+
+    return TEMPLATES(
+        "changes_table.html",
         context=context,
         status_code=status_code,
     )

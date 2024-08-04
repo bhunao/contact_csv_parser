@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-5">
+        <h2>
+            Histórico de Mudanças
+            {% if person_id %}
+            - {{ person_id }}
+            {% endif %}
+        </h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">ID da Pessoa</th>
+                    <th scope="col">Data da Mudança</th>
+                    <th scope="col">Campo</th>
+                    <th scope="col">Valor Antigo</th>
+                    <th scope="col">Valor Novo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in auditlog_list %}
+                <tr hx-target="this" hx-swap="outerHTML">
+                    <td>{{ log.person_id }}</td>
+                    <td>{{ log.date_changed }}</td>
+                    <td>{{ log.row_changed }}</td>
+                    <td>{{ log.old_value }}</td>
+                    <td>{{ log.new_value }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
