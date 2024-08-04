@@ -44,12 +44,16 @@
                 {% else %}
                 <div class="d-flex justify-content-end">
                     <a href="/persons/data/{{ person.id }}/edit">
-                        <button href="" type="button" class="mx-2 btn btn-dark" id="editButton">Edit</button>
+                        <button href="" type="button" class="mx-2 btn btn-dark" id="editButton">
+                            Edit
+                        <i class="bi bi-pencil-fill"></i>
+                        </button>
                     </a>
 
                     <a href="/persons/changelog?_id={{ person.id }}">
                         <button type="button" class="btn btn-dark mx-2">
                             Log
+                            <i class="bi bi-archive-fill"></i>
                         </button>
                     </a>
                 </div>
