@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="container mt-5">
+    <div class="container mt-5" hx-target="this" hx-swap="outerHTML">
 
         <div class="container">
             <div class="row">
@@ -16,19 +16,61 @@
                             </h3>
                         </button>
                     </a>
+
+                    <a href="/persons/create">
+                        <button class="btn btn-dark btn-sm my-2">
+                            Novo Contato
+                            <h3>
+                                <i class="bi bi-person-plus-fill"></i>
+                            </h3>
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
+
         <hr>
 
-        <div class="text-end">
-        <a href="/persons/create">
-            <button class="btn btn-dark btn-sm my-2">
-                Novo Contato
-                <i class="bi bi-person-plus-fill"></i>
-            </button>
-        </a>
-        </div>
+        <form
+            hx-get="/persons/all"
+            hx-trigger="submit"
+        >
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="personName" class="form-label">Nome</label>
+                    <input name="nome" type="text" class="form-control" id="personName">
+                </div>
+                <div class="col-md-4">
+                    <label for="birthDate" class="form-label">Data de Nascimento</label>
+                    <input name="data_nascimento" type="date" class="form-control" id="birthDate">
+                </div>
+                <div class="col-md-4">
+                    <label for="gender" class="form-label">Gênero</label>
+                    <select name="genero" class="form-select" id="gender">
+                        <option value="" selected>Selecione o Gênero</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Feminino">Feminino</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="nationality" class="form-label">Nacionalidade</label>
+                    <input name="nacionalidade" type="text" class="form-control" id="nationality">
+                </div>
+                <div class="col-md-4">
+                    <label for="creationDate" class="form-label">Data de Criação</label>
+                    <input name="data_criacao" type="date" class="form-control" id="creationDate">
+                </div>
+                <div class="col-md-4">
+                    <label for="updateDate" class="form-label">Data de Atualização</label>
+                    <input name="data_atualizacao" type="date" class="form-control" id="updateDate">
+                </div>
+
+                <button type="submit" class="btn btn-dark" id="filterButton">Filtrar</button>
+            </div>
+        </form>
+        <hr>
+
 
 
         <table class="table table-striped shadow">

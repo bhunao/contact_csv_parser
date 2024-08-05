@@ -18,8 +18,13 @@
                     <input name="data_nascimento" type="date" class="form-control" id="birthDate" required>
                 </div>
                 <div class="mb-3">
-                    <label for="gender" class="form-label">Genero</label>
-                    <input name="genero" type="text" class="form-control" id="gender" required>
+                    <label for="gender" class="form-label">Gênero</label>
+                    <select name="genero" class="form-select" id="gender">
+                        <option value="" selected>Selecione o Gênero</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Feminino">Feminino</option>
+                        <option value="Outro">Outro</option>
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label for="nationality" class="form-label">Nacionalidade</label>

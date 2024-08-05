@@ -188,8 +188,11 @@ async def create_new_person_post(
 async def get__all_persons(
     request: Request,
     nome: str | None = None,
+    data_nascimento: str | None = None,
     genero: str | None = None,
-    nacionalidade: str | None = None
+    nacionalidade: str | None = None,
+    data_criacao: str | None = None,
+    data_atualizacao: str | None = None,
 ):
     filter = dict()
     if nome:
@@ -199,8 +202,11 @@ async def get__all_persons(
     if nacionalidade:
         filter["nacionalidade"] = nacionalidade
 
-    # TODO: adicionar filtros
-    valid_rec_list = await Database.get_all_persons()
+    from pprint import pprint
+    pprint(filter)
+    is_hx_request = request.headers.get("Hx-Request") == "true"
+
+    valid_rec_list = await Database.get_all_persons(filter=filter)
     context: dict[str, Any] = {"request": request}
     context["persons_list"] = valid_rec_list
     status_code = 200
@@ -208,6 +214,7 @@ async def get__all_persons(
         "persons_table.html",
         context=context,
         status_code=status_code,
+        block_name="content" if is_hx_request else None
     )
 
 

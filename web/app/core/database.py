@@ -128,7 +128,7 @@ class Database:
 
     @classmethod
     async def get_all_persons(cls, n: int | None = None, filter: DictAny | None = None) -> list[Person]:
-        persons_cursor = persons.find()
+        persons_cursor = persons.find(filter)
         persons_list = await persons_cursor.to_list(n)
         valid_rec_list = []
         for vals in persons_list:
