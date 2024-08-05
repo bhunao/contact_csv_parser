@@ -183,7 +183,7 @@ async def create_new_person_post(
 
 
 @router.get("/all")
-async def get__all_persons(
+async def get_all_persons(
     request: Request,
     nome: str | None = None,
     data_nascimento: str | None = None,

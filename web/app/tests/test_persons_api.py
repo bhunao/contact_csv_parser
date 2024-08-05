@@ -1,3 +1,4 @@
+"""Testing the API endpoints and the templates returned by Jinja"""
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -59,3 +60,12 @@ def test_persons_table_template(client: TestClient) -> None:
     assert response.status_code == 200
     assert response.template is not None
     assert response.template.name == "persons_table.html"
+
+
+def test_persons_changelog_table_template(client: TestClient) -> None:
+    response = client.get(
+        "/persons/changelog",
+    )
+    assert response.status_code == 200
+    assert response.template is not None
+    assert response.template.name == "changes_table.html"
