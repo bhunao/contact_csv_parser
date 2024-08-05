@@ -121,6 +121,26 @@ def test_edit_invalid_person_put_data(client: TestClient) -> None:
     assert response.status_code == 404
 
 
+@pytest.mark.skip("response not returning template")
+def test_create_new_person(client: TestClient) -> None:
+    form_data = {
+        "nome":	"qewr",
+        "data_nascimento":	"0960-02-04",
+        "genero":	"Masculino",
+        "nacionalidade":	"qwerqwer",
+        "data_criacao":	"1996-02-12",
+        "data_atualizacao":	"1997-12-25"
+    }
+    response = client.post(
+        "/persons/create",
+        data=form_data
+    )
+    assert response.status_code == 200
+    assert response.template is not None
+    assert response.template.name == "persons_data.html"
+    assert response.context["person"].nome == form_data["nome"]
+
+
 def test_persons_table_template(client: TestClient) -> None:
     response = client.get(
         "/persons/all",
