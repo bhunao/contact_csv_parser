@@ -2,21 +2,20 @@
 
 ## Arquitetura
 ### Tecnologías
-- Docker
-- Python 3.11
+- [Docker](https://www.docker.com/)
+- [Python](https://docs.python.org/3.11/) 3.11
 - [FastAPI](https://fastapi.tiangolo.com/) 0.109
 - [Pydantic](https://docs.pydantic.dev/) 2.8
 - [Jinja2Fragments](https://github.com/sponsfreixes/jinja2-fragments) 1.2
 - [Motor](https://motor.readthedocs.io/en/stable/) 3.1
 - [HTMX](https://htmx.org/) 2.0
 - [Bootstrap](https://getbootstrap.com/) 5.3
-- [MongoDB](https://www.mongodb.com/docs/upcoming/release-notes/7.0/) mongodb 7.0
+- [MongoDB](https://www.mongodb.com/docs/upcoming/release-notes/7.0/) 7.0
 - [Mongo-Express](https://hub.docker.com/_/mongo-express/) 
 
-O projeto foi criado utilizando como base FastAPI para o back-end e Jinja2Fragments com HTMX no front-end, utili
 
 #### Design
-O projeto foi criado utilizando tecnologías simples e que entregam e assim facilitando a velocidade de desenvolvimento e adição de novas funcionalidades.
+O projeto foi criado utilizando tecnologías simples e que entregam, assim facilitando a velocidade de desenvolvimento e adição de novas funcionalidades.
 
 ##### Front-End
 No front-end foi utilizado [Bootstrap](https://getbootstrap.com/) para estilização e responvidade da aplicação. [Jinja2Fragments](https://github.com/sponsfreixes/jinja2-fragments) é utilizado para o backend para retornar a pagina HTML ao usuário, diferente do [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) ele pode retornar sómente blocos de HTML gerados no Jinja fazendo com que seja possivel criar junto com [HTMX](https://htmx.org/) paginas que consigam conectar com o backend diretamente sem a necessidade de ter uma aplicação separada para o front-end já que HTMX te da acesso a AJAX, transições CSS, WebSockets e Server Sent Events direto no HTML.
