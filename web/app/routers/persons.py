@@ -89,7 +89,7 @@ async def edit_person(request: Request, _id: str):
         context["edit"] = True
         context["person"] = record
         status_code = 200
-    except InvalidId as e:
+    except Exception as e:
         logger.error(e)
         context["error"] = "Person id not found."
         status_code = 404
