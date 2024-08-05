@@ -1,17 +1,15 @@
 from datetime import date
 import logging
-from io import BytesIO, StringIO
+from io import StringIO
 from typing import Any
-from bson import ObjectId
 from bson.errors import InvalidId
-from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, StreamingResponse
 import pandas as pd
 
 from fastapi import APIRouter, Form, Request, UploadFile
 
-from app.core.database import Database, persons, persons_changelog
+from app.core.database import Database
 from app.core.config import settings
-from app.models import Person, PersonsChangeLog
 
 
 TEMPLATES = settings.TEMPLATES.TemplateResponse
@@ -39,7 +37,6 @@ async def csv_file_to_dict(file: UploadFile) -> list[dict[str, Any]]:
 @router.post("/upload_csv", response_class=HTMLResponse)
 async def upload_csv(request: Request, file: UploadFile):
     """Recebe o arquivo CSV enviado pelo usuário."""
-    # await client.server_info()
     context: dict[str, Any] = {"request": request}
     try:
         records = await csv_file_to_dict(file)
@@ -70,8 +67,8 @@ async def get_person(request: Request, _id: str):
         record = await Database.get_person(_id)
         context["person"] = record
         status_code = 200
-    except InvalidId as e:
-        logger.debug(e)
+    except Exception as e:
+        logger.error(e)
         context["error"] = "Person id not found."
         status_code = 404
 
@@ -93,7 +90,7 @@ async def edit_person(request: Request, _id: str):
         context["person"] = record
         status_code = 200
     except InvalidId as e:
-        logger.debug(e)
+        logger.error(e)
         context["error"] = "Person id not found."
         status_code = 404
 
@@ -105,12 +102,13 @@ async def edit_person(request: Request, _id: str):
 
 
 @router.put("/data/{_id}")
-async def edit_person_put(request: Request, _id: str,
-                          nome: str = Form(""),
-                          data_nascimento: str = Form(""),
-                          genero: str = Form(""),
-                          nacionalidade: str = Form(""),
-                          ):
+async def edit_person_put(
+    request: Request, _id: str,
+    nome: str = Form(""),
+    data_nascimento: str = Form(""),
+    genero: str = Form(""),
+    nacionalidade: str = Form(""),
+):
     """Edição dos dados da tabela no banco."""
     context: dict[str, Any] = {"request": request}
     status_code: int

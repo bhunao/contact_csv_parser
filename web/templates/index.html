@@ -9,7 +9,7 @@
 
                 <form id="form" hx-encoding="multipart/form-data" hx-post="/persons/upload_csv">
                     <div class="mb-3">
-                        <input type="file" name="file" class="form-control">
+                        <input type="file" name="file" class="form-control" required>
                     </div>
                     <button hx-post="/persons/upload_csv" hx-target="#modal_content" hx-trigger="click" data-bs-toggle="modal"
                         data-bs-target="#modals-here" type="submit" class="btn btn-dark w-100">Upload</button>

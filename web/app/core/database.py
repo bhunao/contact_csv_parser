@@ -4,8 +4,8 @@ from io import BytesIO
 import logging
 from typing import Any
 from bson import ObjectId
-from bson.errors import InvalidId
 from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import InsertOne
 from pymongo.results import InsertManyResult
 
 from app.core.config import settings
@@ -31,6 +31,11 @@ class Database:
     @classmethod
     async def create_persons(cls, persons_list: list[DictAny]) -> InsertManyResult | None:
         to_insert = []
+        day: str
+        month: str
+        year: str
+        first: str
+        last: str
         for record in persons_list:
             date_fields = ("data_nascimento", "data_criacao",
                            "data_atualizacao")
@@ -51,7 +56,6 @@ class Database:
             _person = await persons.find_one(dump_rec)
             if not _person:
                 to_insert.append(dump_rec)
-                # _ = await persons.insert_one(dump_rec)
         if to_insert:
             inserted = await persons.insert_many(to_insert)
             return inserted
@@ -68,6 +72,8 @@ class Database:
     async def audit_log_changed(cls, _id: str, old: Person, new: Person) -> DictAny:
         old_dict = old.model_dump()
         new_dict = new.model_dump()
+        _old: str
+        _new: str
 
         diff: DictAny = dict()
         for key in old_dict:
@@ -87,7 +93,7 @@ class Database:
                     new_value=_new,
                 )
                 log_dict = log.model_dump()
-                insrted = await persons_changelog.insert_one(log_dict)
+                insrted: InsertOne = await persons_changelog.insert_one(log_dict)
         return diff
 
     @classmethod
@@ -103,8 +109,6 @@ class Database:
             return old_record
 
         diff["data_atualizacao"] = new_record.model_dump()["data_atualizacao"]
-        updated_values = new_record.model_dump(
-            exclude={"data_criacao"})
         updated = await persons.update_one(
             filter={"_id": ObjectId(_id)},
             update={"$set": diff}
