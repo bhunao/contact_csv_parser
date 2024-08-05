@@ -15,7 +15,7 @@
 
 
 #### Design
-O projeto foi criado utilizando tecnologías simples e que entregam, assim facilitando a velocidade de desenvolvimento e adição de novas funcionalidades.
+O projeto foi criado utilizando tecnologías simples e que entregam, assim facilitando a velocidade de desenvolvimento e adição de novas funcionalidades. Tudo isso dentro da container do [Docker](https://www.docker.com/) para facilitar o desenvolvimento em ambientes diferentes.
 
 ##### Front-End
 No front-end foi utilizado [Bootstrap](https://getbootstrap.com/) para estilização e responvidade da aplicação. [Jinja2Fragments](https://github.com/sponsfreixes/jinja2-fragments) é utilizado para o backend retornar a pagina HTML ao usuário, diferente do [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) ele pode retornar sómente blocos de HTML gerados no Jinja fazendo com que seja possivel criar junto com [HTMX](https://htmx.org/) paginas que consigam conectar com o backend diretamente sem a necessidade de ter uma aplicação separada para o front-end já que HTMX te da acesso a AJAX, transições CSS, WebSockets e Server Sent Events direto no HTML.
@@ -33,7 +33,15 @@ O projeto utiliza de algumas variáveis de ambiente que ficam no arquivo `.env`.
 
 Para rodar o projeto é necessário ter o docker instalado e rodar os seguintes comandos:  
 `docker compose build`  
-`docker compose up`
+`docker compose up`  
+
+depois só acessar localhost na porta 8777 [http://localhost:8777/persons/](http://localhost:8777/persons/) 
+
+### Testes
+No projeto existem testes criados com [PyTest](https://docs.pytest.org/en/stable/) para os endpoints da API, todos os testes testam status code e a template retornada ao acessar o endpoint.
+
+Para rodar os testes dentro do docker basta rodar o comando:  
+`docker compose exec web pytest -v`
 
 ## O Projeto
 
