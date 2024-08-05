@@ -45,7 +45,7 @@ async def upload_csv(request: Request, file: UploadFile):
         records = await csv_file_to_dict(file)
         new_recs = await Database.create_persons(records)
         n = len(new_recs.inserted_ids) if new_recs else 0
-        context["msg"] = f"{n} new records created from file.",
+        context["msg"] = f"{n} Novos contatos foram criados a partir do arquivo {file.filename}."
         context["alert_type"] = "success"
         status_code = 200
     except Exception as e:
