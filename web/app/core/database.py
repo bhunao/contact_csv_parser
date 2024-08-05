@@ -24,10 +24,12 @@ database = client.get_database("zoox")
 persons = database.get_collection("persons")
 persons_changelog = database.get_collection("persons_changelog")
 
+DictAny = dict[str, Any]
+
 
 class Database:
     @classmethod
-    async def create_persons(cls, persons_list: list[dict[str, Any]]) -> InsertManyResult | None:
+    async def create_persons(cls, persons_list: list[DictAny]) -> InsertManyResult | None:
         to_insert = []
         for record in persons_list:
             date_fields = ("data_nascimento", "data_criacao",
@@ -57,17 +59,17 @@ class Database:
 
     @classmethod
     async def get_person(cls, _id: str) -> Person:
-        result: dict[str, Any] = await persons.find_one({"_id": ObjectId(_id)})
+        result: DictAny = await persons.find_one({"_id": ObjectId(_id)})
         valid_record = Person(**result)
         valid_record.id = result['_id']
         return valid_record
 
     @classmethod
-    async def audit_log_changed(cls, _id: str, old: Person, new: Person) -> dict[str, Any]:
+    async def audit_log_changed(cls, _id: str, old: Person, new: Person) -> DictAny:
         old_dict = old.model_dump()
         new_dict = new.model_dump()
 
-        diff: dict[str, Any] = dict()
+        diff: DictAny = dict()
         for key in old_dict:
             if key in ("data_criacao", "data_atualizacao"):
                 continue
@@ -89,7 +91,7 @@ class Database:
         return diff
 
     @classmethod
-    async def edit_person(cls, _id: str, new_data: dict[str, Any]) -> Person:
+    async def edit_person(cls, _id: str, new_data: DictAny) -> Person:
         new_record = Person(**new_data)
         result = await persons.find_one({"_id": ObjectId(_id)})
 
@@ -116,7 +118,7 @@ class Database:
         return valid_rec
 
     @classmethod
-    async def create_one_person(cls, new_data: dict[str, Any]) -> Person:
+    async def create_one_person(cls, new_data: DictAny) -> Person:
         valid_rec = Person(**new_data)
         result = await persons.insert_one(valid_rec.model_dump())
         db_rec = await persons.find_one({"_id": ObjectId(result.inserted_id)})
@@ -125,7 +127,7 @@ class Database:
         return valid_rec
 
     @classmethod
-    async def get_all_persons(cls, n: int | None = None) -> list[Person]:
+    async def get_all_persons(cls, n: int | None = None, filter: DictAny | None = None) -> list[Person]:
         persons_cursor = persons.find()
         persons_list = await persons_cursor.to_list(n)
         valid_rec_list = []

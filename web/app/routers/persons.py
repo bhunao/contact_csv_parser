@@ -185,7 +185,21 @@ async def create_new_person_post(
 
 
 @router.get("/all")
-async def get__all_persons(request: Request):
+async def get__all_persons(
+    request: Request,
+    nome: str | None = None,
+    genero: str | None = None,
+    nacionalidade: str | None = None
+):
+    filter = dict()
+    if nome:
+        filter["nome"] = nome
+    if genero:
+        filter["genero"] = genero
+    if nacionalidade:
+        filter["nacionalidade"] = nacionalidade
+
+    # TODO: adicionar filtros
     valid_rec_list = await Database.get_all_persons()
     context: dict[str, Any] = {"request": request}
     context["persons_list"] = valid_rec_list
