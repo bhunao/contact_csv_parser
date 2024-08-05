@@ -147,15 +147,15 @@ async def create_new_person_get(request: Request):
     )
 
 
-@router.post("/create")
+@router.post("/create", response_class=HTMLResponse)
 async def create_new_person_post(
     request: Request,
-    nome: str = Form(""),
-    data_nascimento: str = Form(""),
-    genero: str = Form(""),
-    nacionalidade: str = Form(""),
-    data_criacao: str = Form(""),
-    data_atualizacao: str = Form(""),
+    nome: str = Form(None),
+    data_nascimento: str = Form(None),
+    genero: str = Form(None),
+    nacionalidade: str = Form(None),
+    data_criacao: str = Form(None),
+    data_atualizacao: str = Form(None),
 ):
     context: dict[str, Any] = {"request": request}
     try:
