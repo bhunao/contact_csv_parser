@@ -17,14 +17,6 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.get("/", response_class=HTMLResponse)
-async def index(request: Request):
-    return TEMPLATES(
-        "index.html",
-        context={"request": request}
-    )
-
-
 async def csv_file_to_dict(file: UploadFile) -> list[dict[str, Any]]:
     content = await file.read()
     content = str(content, "utf-8")
@@ -32,6 +24,14 @@ async def csv_file_to_dict(file: UploadFile) -> list[dict[str, Any]]:
     csv = pd.read_csv(content)
     records = csv.to_dict("records")
     return records
+
+
+@router.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return TEMPLATES(
+        "index.html",
+        context={"request": request}
+    )
 
 
 @router.post("/upload_csv", response_class=HTMLResponse)

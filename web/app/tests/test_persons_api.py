@@ -41,3 +41,12 @@ def test_upload_invalid_csv(client: TestClient):
     assert response.template is not None
     assert response.template.name == "alert.html"
     assert response.context["alert_type"] == "danger"
+
+
+def test_index_template(client: TestClient) -> None:
+    response = client.get(
+        "/persons/",
+    )
+    assert response.status_code == 200
+    assert response.template is not None
+    assert response.template.name == "index.html"
