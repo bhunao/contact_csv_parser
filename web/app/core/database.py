@@ -97,9 +97,6 @@ class Database:
 
         old_record = Person(**result)
         diff = await cls.audit_log_changed(_id, old_record, new_record)
-        print("===================")
-        print(diff)
-        print("===================")
         if not diff:
             logger.info(f"No changes in the document '{_id}'.")
             old_record.id = _id

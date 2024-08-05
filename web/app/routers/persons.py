@@ -202,8 +202,6 @@ async def get__all_persons(
     if nacionalidade:
         filter["nacionalidade"] = nacionalidade
 
-    from pprint import pprint
-    pprint(filter)
     is_hx_request = request.headers.get("Hx-Request") == "true"
 
     valid_rec_list = await Database.get_all_persons(filter=filter)
