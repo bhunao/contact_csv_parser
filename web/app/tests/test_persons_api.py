@@ -103,6 +103,24 @@ def test_edit_invalid_person_data_template(client: TestClient) -> None:
     assert response.context["error"] == "Person id not found."
 
 
+@pytest.mark.skip(NEED_DIFF_DB)
+def test_edit_valid_person_put_data(client: TestClient) -> None:
+    invalid_id = "TOTALLY_VALID_ID"
+    response = client.get(
+        f"/persons/data/{invalid_id}/edit",
+    )
+    assert response.status_code == 200
+
+
+@pytest.mark.skip(NEED_DIFF_DB)
+def test_edit_invalid_person_put_data(client: TestClient) -> None:
+    invalid_id = "TOTALLY_VALID_ID"
+    response = client.get(
+        f"/persons/data/{invalid_id}/edit",
+    )
+    assert response.status_code == 404
+
+
 def test_persons_table_template(client: TestClient) -> None:
     response = client.get(
         "/persons/all",
