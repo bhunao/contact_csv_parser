@@ -50,3 +50,12 @@ def test_index_template(client: TestClient) -> None:
     assert response.status_code == 200
     assert response.template is not None
     assert response.template.name == "index.html"
+
+
+def test_persons_table_template(client: TestClient) -> None:
+    response = client.get(
+        "/persons/all",
+    )
+    assert response.status_code == 200
+    assert response.template is not None
+    assert response.template.name == "persons_table.html"
